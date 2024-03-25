@@ -15,7 +15,7 @@ Link to Frontend: https://github.com/muhammad-junaid1/timelined-frontend/tree/ma
 
 Here is the link to use the app. 
 
-https://timelined.web.app
+https://get-timelined.web.app/
 
 ## **Tech Stack**
 
