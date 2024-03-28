@@ -28,9 +28,39 @@ app.get("/teachers", async (req, res) => {
       allTeachers.push(...response.data);
     });
 
+    const images = allTeachers.map((teacher) =>
+      teacher.ImagePath ? "http://isb.nu.edu.pk" + teacher.ImagePath : ""
+    );
+
+    const imagePromises = images.map(async (url) => {
+      if (!url) {
+        return "";
+      }
+
+      try {
+        const response = await axios.get(url, { responseType: "arraybuffer" });
+
+        const buffer = Buffer.from(response.data, "binary");
+        return `data:image/png;base64,${buffer.toString("base64")}`;
+      } catch (error) {
+        // error
+        return "";
+      }
+    });
+
+    const imagesBase64 = await Promise.all(imagePromises);
+
+    const result = allTeachers.map((teacher, index) => {
+      return {
+        ...teacher,
+        ImagePath: imagesBase64[index],
+      };
+    });
+
+
     res.status(200).json({
       status: true,
-      data: allTeachers,
+      data: result,
     });
   } catch (error) {
     console.log(error);
