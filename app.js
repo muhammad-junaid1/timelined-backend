@@ -28,39 +28,51 @@ app.get("/teachers", async (req, res) => {
       allTeachers.push(...response.data);
     });
 
-    const images = allTeachers.map((teacher) =>
-      teacher.ImagePath ? "http://isb.nu.edu.pk" + teacher.ImagePath : ""
-    );
+    // Fetching just these designations
+    /**
+     * - Lecturer
+     * - Assistant Professor
+     * - Associate Professor
+     * - Director & Professor
+     * - Professor
+     * - Instructor
+     */
 
-    const imagePromises = images.map(async (url) => {
-      if (!url) {
-        return "";
-      }
+    // const allTeachersFiltered = allTeachers.filter(teacher => [1, 5, 7, 81, 11, 13].includes(teacher.Designation_ID)); 
 
-      try {
-        const response = await axios.get(url, { responseType: "arraybuffer" });
+    // const images = allTeachersFiltered.map((teacher) =>
+    //   teacher.ImagePath ? "http://isb.nu.edu.pk" + teacher.ImagePath : ""
+    // );
 
-        const buffer = Buffer.from(response.data, "binary");
-        return `data:image/png;base64,${buffer.toString("base64")}`;
-      } catch (error) {
-        // error
-        return "";
-      }
-    });
+    // const imagePromises = images.map(async (url) => {
+    //   if (!url) {
+    //     return "";
+    //   }
 
-    const imagesBase64 = await Promise.all(imagePromises);
+    //   try {
+    //     const response = await axios.get(url, { responseType: "arraybuffer" });
 
-    const result = allTeachers.map((teacher, index) => {
-      return {
-        ...teacher,
-        ImagePath: imagesBase64[index],
-      };
-    });
+    //     const buffer = Buffer.from(response.data, "binary");
+    //     return `data:image/png;base64,${buffer.toString("base64")}`;
+    //   } catch (error) {
+    //     // error
+    //     return "";
+    //   }
+    // });
+
+    // const imagesBase64 = await Promise.all(imagePromises);
+
+    // const result = allTeachersFiltered.map((teacher, index) => {
+    //   return {
+    //     ...teacher,
+    //     ImagePath: imagesBase64[index],
+    //   };
+    // });
 
 
     res.status(200).json({
       status: true,
-      data: result,
+      data: allTeachers,
     });
   } catch (error) {
     console.log(error);
